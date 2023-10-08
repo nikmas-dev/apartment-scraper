@@ -3,6 +3,7 @@ use serde_json::json;
 use std::error::Error;
 use std::thread::sleep;
 use std::time::Duration;
+use anyhow::bail;
 
 pub struct TelegramNotifier {
     token: String,
@@ -14,7 +15,7 @@ impl TelegramNotifier {
         TelegramNotifier { token, chat_id }
     }
 
-    pub fn send_message(&self, message: &str) -> Result<(), Box<dyn Error>> {
+    pub fn send_message(&self, message: &str) -> anyhow::Result<()> {
         tracing::info!("sending message to Telegram about new ads");
         let client = reqwest::blocking::Client::new();
 
@@ -43,7 +44,7 @@ impl TelegramNotifier {
                     tracing::info!("number of tries left: {}", number_of_tries);
                     if number_of_tries == 0 {
                         tracing::error!("number of tries exceeded");
-                        return Err(Box::new(err));
+                        bail!(err)
                     }
                     sleep(Duration::from_secs(SECS_TO_SLEEP_AFTER_REQUEST_ERROR));
                 }
