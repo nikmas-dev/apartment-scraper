@@ -75,7 +75,7 @@ fn get_number_of_ads(notifier: &TelegramNotifier) -> anyhow::Result<NumberOfAds>
                 if number_of_tries == 0 {
                     tracing::info!("number of tries to request lun exceeded");
                     notifier
-                        .send_message("number of tries to request lun exceeded")?
+                        .send_message("number of tries to request lun exceeded")?;
                     bail!("failed to request lun: {:?}", err);
                 }
                 sleep(Duration::from_secs(SECS_TO_SLEEP_AFTER_REQUEST_ERROR));
